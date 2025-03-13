@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHADYTUBE</title>
+  <style>
+    .header{
+      display: flex;
+      background-color: white;
+      justify-content: space-between;
+      align-items: center;
+      height: 70px;
+      position: fixed;
+      right: 0;
+      left: 0;
+      top: 0;
+      z-index: 200;
+      margin-top: 0;
+      border-bottom-width: 1px;
+      border-bottom-style: solid;
+    }
+    
+    body{
+      background-color: #0044ff;
+    
+      
+    }
+    
+    .left-side{
+      display: flex;
+      flex: 1;
+      flex-direction: row;
+      align-items: center;
+      margin-right: 10px;
+    }
+
+    .middle-side{
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+      margin-left: 60px;
+      margin-right: 50px;
+      align-items: center;
+    }
+    .right-side{
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+      align-items: center;
+      justify-content: space-between;
+      margin-left: 60px;
+      flex-shrink: 0;
+    }
+
+    .search-bar{
+      height: 36px;
+      font-size: 16px;
+      font-weight: 500;
+      flex: 1;
+      width: 0;
+      border-top-left-radius: 25px;
+      border-bottom-left-radius: 25px;
+      padding-right: -5px;
+      border-width: 1px;
+      border-color:  #0044ff;
+      border-style: solid;
+    }
+    .search-bar::placeholder{
+      padding-left: 5px;
+      color: #0044ff;
+    }
+    
+    .video-grid{
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      margin-top: 100px;
+      row-gap: 10px;
+      column-gap: 10px;
+      z-index: 0;
+      margin-left: 100px;
+      margin-right: 20px;
+    }
+    .video-info-grid{
+      display: grid;
+      grid-template-columns: 50px 1fr;
+      
+    }
+    .channel-info{
+      vertical-align: top;
+      width: 300px;
+      margin-left: 10px;
+      line-height: 10px;
+      margin-top: 5px;
+    }
+    .video-title{
+      margin-top: 0;
+      
+    }
+    .video-author,
+    .video-age{
+      color: black;
+    }
+
+    .video-title,
+    .video-author,
+    .video-age{
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-weight: bold;
+      color: white;
+    }
+    video:hover{
+      cursor: pointer;
+    }
+    video{
+      border-radius: 8px;
+      border:none;
+      background-color: rgb(81, 81, 104);
+    }
+    .the-video{
+      position: relative;
+    }
+    .video-time{
+      position: absolute;
+      bottom: 4.51px;
+      right: 0;
+      background-color: white;
+      color: black;
+      border-bottom-right-radius: 8px;
+      padding-left: 2px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-weight: bold;
+      font-size: 13px;
+    }
+    @media (max-width:900px){
+      .video-grid{
+        grid-template-columns: 1fr 1fr;
+        margin-left: 100px;
+        margin-right: 20px;
+      }
+    }
+
+    .side-bar{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      top: 70px;
+      width: 80px;
+      z-index: 200;
+      background-color:white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      cursor: pointer;
+      transition: 0.015s;
+      border-right-width: 1px;
+      border-right-style: solid;
+    }
+    .sidebar-link:hover{
+      background-color: rgb(221, 218, 218);
+    }
+    .sidebar-link{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      white-space: nowrap;
+      width: 80px;
+      height: 80px;
+      padding-top: 5px;
+      
+    }
+    .linkname{
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-size: 10px;
+      font-weight: bold;
+      color: #0044ff;
+    }
+    .search-button {
+      position: relative;
+    }
+    .tooltip{
+      position: absolute;
+      bottom: -25px;
+      right: 12px;
+      background-color: rgb(187, 183, 183);
+      font-size: 15px;
+      padding-left: 5px;
+      padding-right: 5px;
+      opacity: 0;
+      transition: 0.15s;
+      pointer-events: none;
+    }
+    .search-button:hover .tooltip{
+      opacity: 1;
+    }
+    .voice-button,
+    .uploadcon,
+    .appscon,
+    .notificationscon{
+      position: relative;
+    }
+    .tooltip3{
+      position: absolute;
+      bottom: -25px;
+      left: -13px;
+      background-color:rgb(187, 183, 183);
+      font-size: 15px;
+      padding-left: 5px;
+      padding-right: 5px;
+      opacity:0;
+      transition: 0.15s;
+      pointer-events: none;
+    }
+    .tooltip4{
+      position: absolute;
+      bottom: -25px;
+      left: -5px;
+      background-color:rgb(187, 183, 183);
+      font-size: 15px;
+      padding-left: 5px;
+      padding-right: 5px;
+      opacity:0;
+      transition: 0.15s;
+      pointer-events: none;
+    }
+    .tooltip5{
+      position: absolute;
+      bottom: -25px;
+      left: -24px;
+      background-color:rgb(187, 183, 183);
+      font-size: 15px;
+      padding-left: 5px;
+      padding-right: 5px;
+      opacity:0;
+      transition: 0.15s;
+      pointer-events: none;
+    }
+    .tooltip2{
+      position: absolute;
+      bottom: -25px;
+      left: -7px;
+      background-color:rgb(187, 183, 183);
+      font-size: 15px;
+      padding-left: 5px;
+      padding-right: 5px;
+      opacity: 0;
+      transition: 0.15s;
+      pointer-events: none;
+    }
+    .voice-button:hover .tooltip2,
+    .uploadcon:hover .tooltip3,
+    .appscon:hover .tooltip4,
+    .notificationscon:hover .tooltip5{
+      opacity: 1;
+    }
+  
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="left-side">
+      <img src="hamburger-menu.svg" height="38px" style="margin-right: 25px; margin-left: 8px; cursor: pointer;">
+        <img src="youtube-logo.svg" height="26px">
+    </div>
+    <div class="middle-side">
+      <input class="search-bar" placeholder="Search">
+      <button class="search-button" style="border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-width: 1px; height: 40.5spx; width: 70px; border-color: #0044ff; border-style: solid; cursor: pointer;">
+        <img src="search.svg" height="32.5px">
+        <div class="tooltip">Search</div>
+      </button>
+      <button class="voice-button" style="margin-left: 10px; border-radius: 50px; border-color: #0044ff; border-width: 1px; height: 40px; width: 40px; cursor: pointer;">
+        <img src="voice-search-icon.svg" >
+        <div class="tooltip2">Speak</div>
+      </button>
+    </div>
+    <div class="right-side">
+      <div class="uploadcon">
+        <img src="upload.svg" height="32.5px" style="cursor: pointer;">
+        <div class="tooltip3">Upload</div>
+      </div>
+      <div class="appscon">
+        <img src="youtube-apps.svg" height="32.5px" style="cursor: pointer;">
+        <div class="tooltip4">Apps</div>
+      </div>
+      <div class="notificationscon">
+        <img src="notifications.svg" height="32.5px" style="cursor: pointer;">
+        <div class="tooltip5">Notifications</div>
+      </div>
+      
+      <img src="436153072_434493549295936_3956101515633424079_n.jpg" style="border-radius: 50px; cursor: pointer;">
+    </div>
+  </div>
+
+
+  
+  <div class="side-bar">
+    <div class="sidebar-link"> 
+      <img src="home.svg" height="30px">
+      <div class="linkname"> Home</div>
+    </div>
+    <div class="sidebar-link">
+      <img src="explore.svg" height="30px">
+      <p class="linkname">Explore</p>
+    </div>
+    <div class="sidebar-link">
+      <img src="subscriptions.svg" height="30px">
+      <p class="linkname"> Subscriptions</p>
+    </div>
+    <div class="sidebar-link">
+      <img src="originals.svg" height="30px">
+      <p class="linkname">Originals</p>
+    </div>
+    <div class="sidebar-link">
+      <img src="youtube-music.svg" height="30px">
+      <p class="linkname"> Youtube music</p>
+    </div>
+    <div class="sidebar-link">
+      <img src="library.svg" height="30px">
+      <p class="linkname">Library</p>
+    </div>
+  </div>
+
+
+  <div class="video-grid">
+    <div class="video-preview">
+      <div class="the-video">
+        <video src="videos/AnimePahe_Kaiko_sareta_Ankoku_Heishi_30-dai_no_Slow_na_Second_Life_-_11_1080p_SubsPlease.mp4" width="100%" height="250px" style="object-fit: inherit;" controls></video>
+        <div class="video-time">
+          23:51
+        </div>
+      </div>
+      <div class="video-info-grid">
+        <div class="channel-pic">
+          <img src="images/channel-1.jpeg" width="50px" style="border-radius: 50px;">
+        </div>
+        <div class="channel-info">
+          <p class="video-title" style=" font-weight: bold;"> 
+            The favoured one
+          </p>
+          <p class="video-author" style="font-size: 15px;"> 
+            kishima
+          </p>
+          <p class="video-age" style=" font-size: 14px;">
+            6 months ago
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="video-preview">
+      <div class="the-video">
+        <video src="videos/AnimePahe_Kaiko_sareta_Ankoku_Heishi_30-dai_no_Slow_na_Second_Life_-_12_1080p_SubsPlease.mp4" width="100%" height="250px" style="object-fit: inherit;" controls></video>
+        <div class="video-time">
+          23:51
+        </div>
+      </div>
+      <div class="video-info-grid">
+        <div class="channel-pic">
+          <img src="images/channel-2.jpeg" width="50px" style="border-radius: 50px;">
+        </div>
+        <div class="channel-info">
+          <p class="video-title" style=" font-weight: bold;"> 
+            The favoured one
+          </p>
+          <p class="video-author" style="font-size: 15px;"> 
+            kishima
+          </p>
+          <p class="video-age" style=" font-size: 14px;">
+            6 months ago
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="video-preview">
+      <div class="the-video">
+        <video src="videos/AnimePahe_One_Piece_-_020_720p_HorribleSubs.mp4" width="100%" height="250px" style="object-fit: inherit;" controls></video>
+        <div class="video-time">
+          25:00
+        </div>
+      </div>
+      <div class="video-info-grid">
+        <div class="channel-pic">
+          <img src="images/channel-3.jpeg" width="50px" style="border-radius: 50px;">
+        </div>
+        <div class="channel-info">
+          <p class="video-title" style=" font-weight: bold;"> 
+            One Piece
+          </p>
+          <p class="video-author" style="font-size: 15px;"> 
+            kishima
+          </p>
+          <p class="video-age" style=" font-size: 14px;">
+            6 months ago
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="video-preview">
+      <div class="the-video">
+        <video src="videos/AnimePahe_One_Piece_-_021_720p_HorribleSubs.mp4" width="100%" height="250px" style="object-fit: inherit;" controls></video>
+        <div class="video-time">
+          25:00
+        </div>
+      </div>
+      <div class="video-info-grid">
+        <div class="channel-pic">
+          <img src="images/channel-4.jpeg" width="50px" style="border-radius: 50px;">
+        </div>
+        <div class="channel-info">
+          <p class="video-title" style=" font-weight: bold;"> 
+            One Piece
+          </p>
+          <p class="video-author" style="font-size: 15px;"> 
+            kishima
+          </p>
+          <p class="video-age" style=" font-size: 14px;">
+            6 months ago
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="video-preview">
+      <div class="the-video">
+        <video src="videos/AnimePahe_One_Piece_-_022_720p_HorribleSubs.mp4" width="100%" height="250px" style="object-fit: inherit;" controls></video>
+        <div class="video-time">
+          25:00
+        </div>
+      </div>
+      <div class="video-info-grid">
+        <div class="channel-pic">
+          <img src="images/channel-5.jpeg" width="50px" style="border-radius: 50px;">
+        </div>
+        <div class="channel-info">
+          <p class="video-title" style=" font-weight: bold;"> 
+            One Piece
+          </p>
+          <p class="video-author" style="font-size: 15px;"> 
+            kishima
+          </p>
+          <p class="video-age" style=" font-size: 14px;">
+            6 months ago
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="video-preview">
+      <div class="the-video">
+        <video src="videos/AnimePahe_One_Piece_-_023_720p_HorribleSubs.mp4" width="100%" height="250px" style="object-fit: inherit;" controls></video>
+        <div class="video-time">
+          25:00
+        </div>
+      </div>
+      <div class="video-info-grid">
+        <div class="channel-pic">
+          <img src="images/channel-6.jpeg" width="50px" style="border-radius: 50px;">
+        </div>
+        <div class="channel-info">
+          <p class="video-title" style=" font-weight: bold;"> 
+            One Piece
+          </p>
+          <p class="video-author" style="font-size: 15px;"> 
+            kishima
+          </p>
+          <p class="video-age" style=" font-size: 14px;">
+            6 months ago
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
